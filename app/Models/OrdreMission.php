@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class OrdreMission extends Model
 {
     use HasFactory;
@@ -21,12 +22,19 @@ class OrdreMission extends Model
         'idFonctionnaire',
         'etatRemboursement',
         'file_path',
+        'montantRemboursement', // Add this if not already present
+        'commentairesRemboursement' // Add this if not already present
     ];
 
-
-    // Define the relationship to Fonctionnaire
-    public function User()
+    // Define the relationship to User
+    public function user()
     {
         return $this->belongsTo(User::class, 'idFonctionnaire');
+    }
+
+    // Add this relationship to connect with RapportDeMission
+    public function rapport()
+    {
+        return $this->hasOne(RapportDeMission::class, 'idOrdreMission');
     }
 }

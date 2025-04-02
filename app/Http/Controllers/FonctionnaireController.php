@@ -80,18 +80,16 @@ class FonctionnaireController extends Controller
     public function storeRapport(Request $request, $missionId)
     {
         $request->validate([
-            'sujet' => 'required|string|max:255',
-            'contenu' => 'required|string',
-            'file_path' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx|max:5120', // 5MB max
+            // ... other validations
         ]);
-
+    
         $mission = OrdreMission::findOrFail($missionId);
-
+    
         // Make sure the mission belongs to the authenticated user
         if ($mission->idFonctionnaire != Auth::id()) {
             return redirect()->route('fonctionnaire.dashboard')->with('error', 'Vous n\'êtes pas autorisé à voir cette mission.');
         }
-
+    
         // Handle file upload
         $filePath = null;
         if ($request->hasFile('file_path')) {
@@ -99,16 +97,17 @@ class FonctionnaireController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('rapports', $filename, 'public');
         }
-
+    
         // Create the rapport
         $rapport = new RapportDeMission();
         $rapport->idOrdreMission = $missionId;
+        $rapport->user_id = Auth::id(); // Add this line to set the user
         $rapport->sujet = $request->sujet;
         $rapport->contenu = $request->contenu;
         $rapport->dateSoumission = now();
         $rapport->file_path = $filePath;
         $rapport->save();
-
+    
         return redirect()->route('fonctionnaire.mission.show', $missionId)->with('success', 'Rapport soumis avec succès.');
     }
     public function missions()

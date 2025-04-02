@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('rapport_mission', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('idOrdreMission');
+            $table->unsignedBigInteger('user_id'); // Add this line
             $table->string('sujet');
             $table->text('contenu');
             $table->date('dateSoumission');
-            $table->string('file_path')->nullable(); // Ajout de ce champ
+            $table->string('file_path')->nullable();
             $table->timestamps();
         
-            // Foreign key constraint
+            // Foreign key constraints
             $table->foreign('idOrdreMission')->references('id')->on('ordre_mission')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Add this line
         });
     }
 

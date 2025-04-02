@@ -282,7 +282,12 @@
                                 <tbody>
                                     @forelse ($rapports as $rapport)
                                         <tr>
-                                            <td class="fw-semibold">{{ $rapport->user->name }}</td>
+                                            <td class="fw-semibold">
+                                                {{-- {{ $rapport->user->name }} --}}
+
+                                                {{ optional($rapport->user)->name ?? 'Unknown User' }}
+
+                                            </td>
                                             <td>{{ $rapport->sujet }}</td>
                                             <td>
                                                 <span class="d-inline-block text-truncate" style="max-width: 150px;">
@@ -302,21 +307,20 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex">
-                                                    <button type="button" class="btn action-btn action-btn-view show-rapport-details" 
-                                                    data-id="{{ $rapport->id }}" 
-                                                    data-name="{{ $rapport->$user->name }}" 
-                                                    data-sujet="{{ $rapport->sujet }}"
-                                                    data-contenu="{{ $rapport->contenu }}"
-                                                    data-date-soumission="{{ $rapport->dateSoumission }}"
-                                                    data-file-path="{{ $rapport->file_path }}"
-                                                    title="View Details">
-                                                    <i class="bi bi-eye-fill"></i>
-                                                </button>
-                                                    <a href="{{ route('admin.rapport.edit', $rapport->id) }}"
+                                                    <button type="button"
+                                                        class="btn action-btn action-btn-view show-rapport-details"
+                                                        data-id="{{ $rapport->id }}" data-name="{{ $rapport->user->name }}"
+                                                        data-sujet="{{ $rapport->sujet }}"
+                                                        data-contenu="{{ $rapport->contenu }}"
+                                                        data-date-soumission="{{ $rapport->dateSoumission }}"
+                                                        data-file-path="{{ $rapport->file_path }}" title="View Details">
+                                                        <i class="bi bi-eye-fill"></i>
+                                                    </button>
+                                                    {{-- <a href="{{ route('admin.rapport.edit', $rapport->id) }}"
                                                         class="btn action-btn action-btn-edit" title="Edit">
                                                         <i class="bi bi-pencil-fill"></i>
-                                                    </a>
-                                                    <form action="{{ route('admin.rapport.destroy', $rapport->id) }}"
+                                                    </a> --}}
+                                                    {{-- <form action="{{ route('admin.rapport.destroy', $rapport->id) }}"
                                                         method="post" class="d-inline"
                                                         onsubmit="return confirm('Are you sure you want to delete this rapport?')">
                                                         @csrf
@@ -325,7 +329,7 @@
                                                             title="Delete">
                                                             <i class="bi bi-trash-fill"></i>
                                                         </button>
-                                                    </form>
+                                                    </form> --}}
                                                 </div>
                                             </td>
                                         </tr>
@@ -481,6 +485,7 @@
             </div>
 
             <!-- JavaScript for Modal -->
+            <!-- JavaScript for Modal -->
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     const modal = document.getElementById('detailsModal');
@@ -488,14 +493,21 @@
                     const closeModal = document.getElementById('closeModal');
                     const closeModalBtn = document.getElementById('closeModalBtn');
                     const showDetailsBtns = document.querySelectorAll('.show-details');
+                    const showRapportDetailsBtns = document.querySelectorAll('.show-rapport-details');
 
-                    // Modal elements
+                    // Modal elements for Mission Details
                     const modalStaffName = document.getElementById('modalStaffName');
                     const modalDestination = document.getElementById('modalDestination');
                     const modalSubject = document.getElementById('modalSubject');
                     const modalStatus = document.getElementById('modalStatus');
                     const modalDatePeriod = document.getElementById('modalDatePeriod');
-                    // const modalTotalUsers = document.getElementById('modalTotalUsers');
+
+                    // Modal elements for Rapport Details
+                    const rapportModal = document.getElementById('rapportDetailsModal');
+                    const modalRapportName = document.getElementById('modalRapportName');
+                    const modalRapportSujet = document.getElementById('modalRapportSujet');
+                    const modalRapportContenu = document.getElementById('modalRapportContenu');
+                    const modalRapportDateSoumission = document.getElementById('modalRapportDateSoumission');
 
                     function openModal() {
                         modal.style.display = 'block';
@@ -503,22 +515,28 @@
                         document.body.style.overflow = 'hidden';
                     }
 
+                    function openRapportModal() {
+                        rapportModal.style.display = 'block';
+                        modalBackdrop.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
+
                     function closeModalFn() {
                         modal.style.display = 'none';
+                        rapportModal.style.display = 'none';
                         modalBackdrop.style.display = 'none';
                         document.body.style.overflow = '';
                     }
 
+                    // Mission Details Modal
                     showDetailsBtns.forEach(btn => {
                         btn.addEventListener('click', function() {
-                            const id = this.getAttribute('data-id');
                             const name = this.getAttribute('data-name');
                             const destination = this.getAttribute('data-destination');
                             const subject = this.getAttribute('data-subject');
                             const status = this.getAttribute('data-status');
                             const dateStart = this.getAttribute('data-start');
                             const dateEnd = this.getAttribute('data-end');
-                            // const totalUsers = this.getAttribute('data-total-users');
 
                             modalStaffName.textContent = name;
                             modalDestination.textContent = destination;
@@ -537,45 +555,47 @@
 
                             modalDatePeriod.innerHTML =
                                 `<div>From: ${dateStart}</div><div>To: ${dateEnd}</div>`;
-                            // modalTotalUsers.textContent = totalUsers;
 
                             openModal();
                         });
                     });
 
+                    // Rapport Details Modal
+                    showRapportDetailsBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const name = this.getAttribute('data-name');
+                            const sujet = this.getAttribute('data-sujet');
+                            const contenu = this.getAttribute('data-contenu');
+                            const dateSoumission = this.getAttribute('data-date-soumission');
+                            const filePath = this.getAttribute('data-file-path');
+
+                            // Remplir le modal avec les données
+                            modalRapportName.textContent = name;
+                            modalRapportSujet.textContent = sujet;
+                            modalRapportContenu.textContent = contenu;
+                            modalRapportDateSoumission.textContent = dateSoumission;
+
+                            // Afficher le lien du document si disponible
+                            const documentElement = document.getElementById('modalRapportDocument');
+                            if (filePath && filePath !== 'null') {
+                                documentElement.innerHTML = `
+                        <a href="/storage/${filePath}" target="_blank" class="btn btn-sm btn-primary">
+                            <i class="bi bi-file-earmark-text"></i> Télécharger le document
+                        </a>
+                    `;
+                            } else {
+                                documentElement.innerHTML =
+                                    '<span class="badge bg-secondary">Aucun document joint</span>';
+                            }
+
+                            openRapportModal();
+                        });
+                    });
+
+                    // Close modal event listeners
                     closeModal.addEventListener('click', closeModalFn);
                     closeModalBtn.addEventListener('click', closeModalFn);
                     modalBackdrop.addEventListener('click', closeModalFn);
-                });
-                showRapportDetailsBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const name = this.getAttribute('data-name');
-                        const sujet = this.getAttribute('data-sujet');
-                        const contenu = this.getAttribute('data-contenu');
-                        const dateSoumission = this.getAttribute('data-date-soumission');
-                        const filePath = this.getAttribute('data-file-path'); // Nouvel attribut
-
-                        // Remplir le modal avec les données
-                        modalRapportName.textContent = name;
-                        modalRapportSujet.textContent = sujet;
-                        modalRapportContenu.textContent = contenu;
-                        modalRapportDateSoumission.textContent = dateSoumission;
-
-                        // Afficher le lien du document si disponible
-                        const documentElement = document.getElementById('modalRapportDocument');
-                        if (filePath && filePath !== 'null') {
-                            documentElement.innerHTML = `
-                <a href="/storage/${filePath}" target="_blank" class="btn btn-sm btn-primary">
-                    <i class="bi bi-file-earmark-text"></i> Télécharger le document
-                </a>
-            `;
-                        } else {
-                            documentElement.innerHTML =
-                                '<span class="badge bg-secondary">Aucun document joint</span>';
-                        }
-
-                        openRapportModal();
-                    });
                 });
             </script>
         </body>

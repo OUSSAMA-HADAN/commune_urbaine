@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ContableController;
 use App\Http\Controllers\FonctionnaireController;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\OrderController;
@@ -10,10 +11,10 @@ use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get("/",[loginController::class,'index']);
+Route::get("/", [loginController::class, 'index']);
 
 
-Route::get("/login",[loginController::class,'index'])->name('login.show');
+Route::get("/login", [loginController::class, 'index'])->name('login.show');
 Route::post('/login', [loginController::class, 'login'])->name('login');
 Route::post('/logout', [loginController::class, 'logout'])->name('logout');
 
@@ -51,8 +52,21 @@ Route::prefix('fonctionnaire')->middleware(['auth', 'fonctionnaire'])->group(fun
     Route::get('/dashboard', [FonctionnaireController::class, 'dashboard'])->name('fonctionnaire.dashboard');
     Route::get('/missions', [FonctionnaireController::class, 'missions'])->name('fonctionnaire.missions');
     Route::get('/rapports', [FonctionnaireController::class, 'rapports'])->name('fonctionnaire.rapports');
-    
+
     Route::get('/mission/{id}', [FonctionnaireController::class, 'showMission'])->name('fonctionnaire.mission.show');
     Route::get('/mission/{missionId}/rapport/create', [FonctionnaireController::class, 'createRapport'])->name('fonctionnaire.rapport.create');
     Route::post('/mission/{missionId}/rapport', [FonctionnaireController::class, 'storeRapport'])->name('fonctionnaire.rapport.store');
+});
+
+
+
+// contable routes
+Route::prefix('contable')->middleware(['auth', 'contable'])->group(function () {
+    Route::get('/dashboard', [ContableController::class, 'dashboard'])->name('contable.dashboard');
+    Route::get('/reimbursement-history', [ContableController::class, 'reimbursementHistory'])->name('contable.reimbursement.history');
+    Route::post('/process-reimbursement/{id}', [ContableController::class, 'processReimbursement'])->name('contable.reimbursement.process');
+    Route::get('/reimbursement/{id}', [ContableController::class, 'processReimbursementDetail'])
+        ->name('contable.reimbursement.detail');
+    Route::post('/reimbursement/validate/{id}', [ContableController::class, 'validateReimbursement'])
+        ->name('contable.reimbursement.validate');
 });
