@@ -23,6 +23,9 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
+
+
+
         .form-control {
             background-color: rgba(255, 255, 255, 0.9);
             border: none;
@@ -74,9 +77,12 @@
             100% {
                 transform: scale(1);
             }
+
+
         }
     </style>
 </head>
+
 <body class="overflow-hidden">
     <div class="position-absolute top-0 start-0 m-4 z-3">
         <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" class="img-fluid logo-pulse" style="height: 80px; filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));">
