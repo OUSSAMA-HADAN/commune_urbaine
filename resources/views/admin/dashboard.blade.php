@@ -306,19 +306,20 @@
                                 <td>
                                     <div class="d-flex">
                                         <button type="button" class="btn action-btn action-btn-view show-details" 
-                                            data-id="{{ $order->id }}" 
-                                            data-name="{{ $order->user->name }}" 
-                                            data-date-debut="{{ $order->dateDebut }}"
-                                            data-date-ariver="{{ $order->dateAriver }}"
-                                            data-date-fin="{{ $order->dateFin }}"
-                                            data-transport="{{ $order->transport }}"
-                                            data-destination="{{ $order->destination }}"
-                                            data-objectif="{{ $order->objectif }}"
-                                            data-id-fonctionnaire="{{ $order->idFonctionnaire }}"
-                                            data-etat-remboursement="{{ $order->etatRemboursement }}"
-                                            title="View Details">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </button>
+                                        data-id="{{ $order->id }}" 
+                                        data-name="{{ $order->user->name }}" 
+                                        data-date-debut="{{ $order->dateDebut }}"
+                                        data-date-ariver="{{ $order->dateAriver }}"
+                                        data-date-fin="{{ $order->dateFin }}"
+                                        data-transport="{{ $order->transport }}"
+                                        data-destination="{{ $order->destination }}"
+                                        data-objectif="{{ $order->objectif }}"
+                                        data-id-fonctionnaire="{{ $order->idFonctionnaire }}"
+                                        data-etat-remboursement="{{ $order->etatRemboursement }}"
+                                        data-montant-remboursement="{{ $order->montantRemboursement ?? 0 }}"
+                                        title="View Details">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </button>
                                         <a href="{{ route('admin.order.edit', $order->id) }}" class="btn action-btn action-btn-edit" title="Edit">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
@@ -353,54 +354,58 @@
     </div>
 
     <!-- Details Modal -->
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    <div class="modal" id="detailsModal">
-        <div class="modal-header">
-            <h5 class="modal-title">Mission Details</h5>
-            <button type="button" class="close-modal" id="closeModal">&times;</button>
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="modal" id="detailsModal">
+    <div class="modal-header">
+        <h5 class="modal-title">Mission Details</h5>
+        <button type="button" class="close-modal" id="closeModal">&times;</button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            <div class="modal-label">Staff Name</div>
+            <div class="modal-value" id="modalStaffName"></div>
         </div>
-        <div class="modal-body">
-            <div class="mb-3">
-                <div class="modal-label">Staff Name</div>
-                <div class="modal-value" id="modalStaffName"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">ID Fonctionnaire</div>
-                <div class="modal-value" id="modalIdFonctionnaire"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">Destination</div>
-                <div class="modal-value" id="modalDestination"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">Objectif</div>
-                <div class="modal-value" id="modalObjectif"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">Transport</div>
-                <div class="modal-value" id="modalTransport"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">Date de Début</div>
-                <div class="modal-value" id="modalDateDebut"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">Date d'Arrivée</div>
-                <div class="modal-value" id="modalDateAriver"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">Date de Fin</div>
-                <div class="modal-value" id="modalDateFin"></div>
-            </div>
-            <div class="mb-3">
-                <div class="modal-label">État de Remboursement</div>
-                <div class="modal-value" id="modalEtatRemboursement"></div>
-            </div>
+        <div class="mb-3">
+            <div class="modal-label">ID Fonctionnaire</div>
+            <div class="modal-value" id="modalIdFonctionnaire"></div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="closeModalBtn">Close</button>
+        <div class="mb-3">
+            <div class="modal-label">Destination</div>
+            <div class="modal-value" id="modalDestination"></div>
+        </div>
+        <div class="mb-3">
+            <div class="modal-label">Objectif</div>
+            <div class="modal-value" id="modalObjectif"></div>
+        </div>
+        <div class="mb-3">
+            <div class="modal-label">Transport</div>
+            <div class="modal-value" id="modalTransport"></div>
+        </div>
+        <div class="mb-3">
+            <div class="modal-label">Date de Début</div>
+            <div class="modal-value" id="modalDateDebut"></div>
+        </div>
+        <div class="mb-3">
+            <div class="modal-label">Date d'Arrivée</div>
+            <div class="modal-value" id="modalDateAriver"></div>
+        </div>
+        <div class="mb-3">
+            <div class="modal-label">Date de Fin</div>
+            <div class="modal-value" id="modalDateFin"></div>
+        </div>
+        <div class="mb-3">
+            <div class="modal-label">État de Remboursement</div>
+            <div class="modal-value" id="modalEtatRemboursement"></div>
+        </div>
+        <div class="mb-3">
+            <div class="modal-label">Montant Remboursé</div>
+            <div class="modal-value" id="modalMontantRemboursement"></div>
         </div>
     </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeModalBtn">Close</button>
+    </div>
+</div>
 
     <!-- JavaScript for Modal -->
     <script>
@@ -421,6 +426,7 @@
             const modalDateAriver = document.getElementById('modalDateAriver');
             const modalDateFin = document.getElementById('modalDateFin');
             const modalEtatRemboursement = document.getElementById('modalEtatRemboursement');
+            const modalMontantRemboursement = document.getElementById('modalMontantRemboursement');
             
             function openModal() {
                 modal.style.display = 'block';
@@ -446,6 +452,7 @@
                     const dateAriver = this.getAttribute('data-date-ariver');
                     const dateFin = this.getAttribute('data-date-fin');
                     const etatRemboursement = this.getAttribute('data-etat-remboursement');
+                    const montantRemboursement = this.getAttribute('data-montant-remboursement') || '0';
                     
                     // Populate modal with data
                     modalStaffName.textContent = name;
@@ -456,6 +463,7 @@
                     modalDateDebut.textContent = dateDebut;
                     modalDateAriver.textContent = dateAriver;
                     modalDateFin.textContent = dateFin;
+                    modalMontantRemboursement.textContent = `${parseFloat(montantRemboursement).toFixed(2)} MAD`;
                     
                     // Set status with badge
                     if (etatRemboursement === 'Completed') {

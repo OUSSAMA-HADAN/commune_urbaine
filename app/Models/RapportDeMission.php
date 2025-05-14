@@ -13,17 +13,20 @@ class RapportDeMission extends Model
 
     protected $fillable = [
         'idOrdreMission',
+        'user_id',
         'sujet',
         'contenu',
         'dateSoumission',
         'file_path',
     ];
 
-    // Define the relationship to OrdreMission
+    // Relationship to OrdreMission
     public function ordreMission()
     {
         return $this->belongsTo(OrdreMission::class, 'idOrdreMission');
     }
+
+    // Relationship to User
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

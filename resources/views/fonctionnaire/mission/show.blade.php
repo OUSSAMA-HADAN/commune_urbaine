@@ -336,7 +336,7 @@
                         <div class="section-label">Document de Mission</div>
                         <div class="section-value">
                             <i class="bi bi-file-earmark-text text-primary"></i>
-                            <a href="{{ asset('storage/' . $mission->file_path) }}" target="_blank">Télécharger le
+                            <a href="{{ asset('storage/' . $mission->file_path) }}" download>Télécharger le
                                 document</a>
                         </div>
                     @endif

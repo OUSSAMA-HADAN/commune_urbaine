@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ordre_mission', function (Blueprint $table) {
+            
             $table->id();
             $table->date('dateDebut');
             $table->date('dateAriver');
@@ -23,6 +24,8 @@ return new class extends Migration
             $table->string('etatRemboursement')->default('EN ATTEND')->nullable();
             $table->string('file_path');
             $table->timestamps();
+            $table->decimal('montantRemboursement', 10, 2)->nullable();
+            $table->text('commentairesRemboursement')->nullable();
 
             // Adding a foreign key constraint for the idFonctionnaire column
             $table->foreign('idFonctionnaire')->references('id')->on('users')->onDelete('cascade');

@@ -4,17 +4,18 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ContableCheck
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        // Check if the user is logged in and has the 'contable' role
+        if (Auth::check() && Auth::user()->role === 'contable') {
+            return $next($request);
+        }
+
+        // Redirect unauthorized users
+        return redirect('/')->with('error', 'You do not have access to this section.');
     }
 }
