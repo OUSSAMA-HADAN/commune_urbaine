@@ -11,7 +11,7 @@ use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get("/",[loginController::class,'index']);
+Route::get("/", [loginController::class, 'index']);
 
 
 Route::get("/login", [loginController::class, 'index'])->name('login.show');
@@ -26,8 +26,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/order/store', [OrderController::class, 'store'])->name('admin.order.store');
 
     Route::get('/order/edit/{id}', [OrderController::class, 'edit'])->name('admin.order.edit');
-    Route::post('/users/update', [OrderController::class, 'update'])->name('admin.order.update');
-    Route::post('/users/delete', [OrderController::class, 'destroy'])->name('admin.order.destroy');
+    Route::put('/order/update/{id}', [OrderController::class, 'update'])->name('admin.order.update');
+    Route::post('/order/delete', [OrderController::class, 'destroy'])->name('admin.order.destroy');
 
     Route::get('/users', [UsersController::class, 'index'])->name('admin.users.show');
 

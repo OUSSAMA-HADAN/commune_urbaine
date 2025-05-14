@@ -284,7 +284,7 @@
         <form action="{{ route('admin.order.update' , $order->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-
+            
             <div class="form-card">
                 <div class="form-header">
                     <h4 class="form-title">
@@ -292,7 +292,7 @@
                         Ordre de Mission
                     </h4>
                 </div>
-                
+                <input type="hidden" name="idFonctionnaire" value="{{ $order->idFonctionnaire }}">
                 <div class="form-body">
                     <div class="form-section">
                         <h5 class="section-title">
@@ -304,7 +304,7 @@
                             <div class="col-md-6">
                                 <div class="form-group" style="--item-index: 1">
                                     <label for="name" class="form-label">Nom</label>
-                                    <input value="{{ old('nom' , $order->user->name) }}" type="text" class="form-control" id="name" name="name" disabled>
+                                    <input value="{{ old('name' , $order->user->name) }}" type="text" class="form-control" id="name" name="name" disabled>
                                 </div>
                             </div>
                             
@@ -400,6 +400,7 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             // File input preview
             const fileInput = document.getElementById('file_path');

@@ -335,9 +335,11 @@
                     @if ($mission->file_path)
                         <div class="section-label">Document de Mission</div>
                         <div class="section-value">
-                            <i class="bi bi-file-earmark-text text-primary"></i>
-                            <a href="{{ asset('storage/' . $mission->file_path) }}" download>Télécharger le
-                                document</a>
+                            <a href="
+                            {{-- {{ route('fonctionnaire.mission.download', $mission->id) }} --}}
+                             " class="btn btn-primary">
+                                <i class="bi bi-download"></i> Télécharger l'Ordre de Mission
+                            </a>
                         </div>
                     @endif
                 </div>

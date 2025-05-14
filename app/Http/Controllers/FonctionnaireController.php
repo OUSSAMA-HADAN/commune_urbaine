@@ -136,6 +136,7 @@ class FonctionnaireController extends Controller
         return view('fonctionnaire.rapports', compact('rapports'));
     }
     
+    
 }
 
 

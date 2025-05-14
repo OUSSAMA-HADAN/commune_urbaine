@@ -28,8 +28,7 @@ class OrderMissionRequest extends FormRequest
             'objectif' => 'required|string|max:500',
             'idFonctionnaire' => 'required|exists:users,id',
             'etatRemboursement' => 'nullable|default:Approved',
-            'file_path' => 'max:2048'
-
+            'file_path' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048'
         ];
     }
 
