@@ -22,8 +22,8 @@ class OrdreMission extends Model
         'idFonctionnaire',
         'etatRemboursement',
         'file_path',
-        'montantRemboursement', 
-        'commentairesRemboursement' 
+        'montantRemboursement', // Add this if not already present
+        'commentairesRemboursement' // Add this if not already present
     ];
 
     // Define the relationship to User
